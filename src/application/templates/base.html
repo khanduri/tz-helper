@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+{% set bootstrap_version = '3.0.0' %}
+{% set modernizer_version = '2.6.2' %}
+{% set jquery_version = '1.9.1' %}
+{% set parsley_version = '1.1.16' %}
+{% set awesome_version = '4.0.1' %}
+{% set bootswatch_version = '3.0.0' %}
+{% set bootswatch_theme = 'cyborg' %}
+{% set angular_version = '1.3.13' %}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+
+    <title>{% block title%}{# Insert title for the page #}{% endblock %}</title>
+
+    <link rel="shortcut icon" href="/static/img/favicon.ico" />
+    <link href="//netdna.bootstrapcdn.com/bootstrap/{{ bootstrap_version }}/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/{{ awesome_version }}/css/font-awesome.min.css" rel="stylesheet" >
+    <link href="//netdna.bootstrapcdn.com/bootswatch/{{ bootswatch_version }}/{{ bootswatch_theme }}/bootstrap.min.css" rel="stylesheet" >
+
+    <link href="/static/css/main.css" rel="stylesheet" />
+
+    {% block style_block %}{# page-specific CSS #}{% endblock %}
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/{{ modernizer_version }}/modernizr.min.js"></script>{# Modernizr must be here, above body tag. #}
+
+    {% block head_script %}{# defer-incapable JS block #}{% endblock %}
+</head>
+<body>
+    {% include 'includes/nav.html' %}
+
+    <div class="container" id="maincontent">
+        {% include 'includes/flash_message.html' %}
+        <div id="body_content">
+            {% block content %}{# main content area #}{% endblock %}
+        </div>
+    </div>
+
+    <footer>
+        <div id="footer" class="container">
+            {% block footer %}{% endblock %}
+        </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/{{ jquery_version }}/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/{{ bootstrap_version }}/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/parsley.js/{{ parsley_version }}/parsley-standalone.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/{{ angular_version }}/angular.min.js"></script>
+    <script src="/static/js/main.js"></script>
+
+    {% block tail_script %}{# defer-capable JS block #}{% endblock %}
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-XXXXX-X');
+        ga('send', 'pageview');
+    </script>
+
+</body>
+</html>
