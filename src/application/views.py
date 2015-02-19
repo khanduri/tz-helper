@@ -1,7 +1,9 @@
 import flask
 import flask_cache
 import application
-import decorators
+import time
+import datetime
+import pytz
 
 
 # Flask-Cache (configured to use App Engine Memcache API)
@@ -12,6 +14,27 @@ def home():
     return flask.render_template('index.html', result=None)
 
 
+def tzhelper():
+    tz_string = flask.request.args.get('tz_string')
+    date_ints = [a for a in flask.request.args.get('date_ints').split(',')]
+
+    tz = pytz.timezone(tz_string)
+    dates = {}
+    for date_int in date_ints:
+        try:
+            y, m, d = parse_date_int(date_int)
+        except Exception:
+            continue
+        dt_utc = datetime.datetime(year=y, month=m, day=d, tzinfo=tz).replace(tzinfo=tz).astimezone(pytz.utc)
+        dates[date_int] = int(utc_mktime(dt_utc.timetuple()))
+
+    data = {
+        'tz': tz_string,
+        'dates': dates,
+    }
+    return flask.jsonify(**data)
+
+
 def warmup():
     """
     App Engine warmup handler
@@ -20,24 +43,16 @@ def warmup():
     return ''
 
 
-############## REMOVE THIS #################
-@decorators.login_required
-def list_examples():
-    from models import ExampleModel
-    examples = ExampleModel.query()
-    return flask.render_template('list_examples.html', examples=examples)
+####################################################
+def utc_mktime(utc_tuple):
+    if len(utc_tuple) == 6:
+        utc_tuple += (0, 0, 0)
+    return time.mktime(utc_tuple) - time.mktime((1970, 1, 1, 0, 0, 0, 0, 0, 0))
 
 
-@decorators.admin_required
-def admin_only():
-    """This view requires an admin account"""
-    return 'Super-seekrit admin page.'
-
-
-@cache.cached(timeout=60)
-def cached_examples():
-    """This view should be cached for 60 sec"""
-    from models import ExampleModel
-    examples = ExampleModel.query()
-    return flask.render_template('list_examples_cached.html', examples=examples)
-############## REMOVE THIS #################
+def parse_date_int(date_int):
+    year = int(date_int[:4])
+    month = int(date_int[4:6])
+    day = int(date_int[6:])
+    return year, month, day
+####################################################

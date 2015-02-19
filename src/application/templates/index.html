@@ -2,47 +2,33 @@
 
 {% block content %}
 
-    {% if not result %}
-        <!--Links to the login handler-->
-        Login with <a href="login/fb">Facebook</a>
-        <br />
-        Login with <a href="login/tw">Twitter</a>
-        <br />
+    <div class="jumbotron"><h2>Timezone helper</h2></div>
 
-        <!--OpenID form-->
-{#        <form action="login/oi">#}
-{#            <input type="text" name="id" value="me.yahoo.com" />#}
-{#            <input type="submit" value="Authenticate With OpenID">#}
-{#        </form>#}
+    <div class="container">
+        <a id="btn-submit-result" class="btn btn-primary">Get Timestamps</a>
 
-    {% else %}
+        <hr/>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>TimeZone</label>
+                    <input id="input-timezone" class="form-control" type="text" placeholder="America/Chicago"/>
+                </div>
+                <div class="form-group">
+                    <label>Dates</label>
+                    <input class="form-control date-inputs" type="text" placeholder="20150215"/>
+                    <input class="form-control date-inputs" type="text" placeholder="20150215"/>
+                    <a id="btn-add-date" class="form-control btn btn-success">+</a>
+                </div>
+            </div>
+            <div id="panel-result" class="col-md-offset-1 col-md-7 jumbotron">
+            </div>
+        </div>
 
-        {# Check for errors. #}
-        {% if result.error %}
-            <h2>Damn that error: {{ result.error.message }}</h2>
-        {% endif %}
+    </div>
 
-        {# Welcome the user. #}
-        {% if result.user %}
-            <h1>Hi {{ result.user.name }}</h1>
-            <h2>Your id is: {{ result.user.id }}</h2>
-            <h2>Your email is: {{ result.user.email }}</h2>
-        {% endif %}
-
-        {# If the user has credentials, we can access his/her protected resources. #}
-        {% if result.user.credentials %}
-
-            {# Let's get the user's 5 most recent statuses. #}
-            {% if result.provider.name == 'fb' %}
-                Your are logged in with Facebook.<br />
-            {% endif %}{# result.provider.name == 'fb' #}
-
-            {# Do the same for Twitter. #}
-            {% if result.provider.name == 'tw' %}
-                Your are logged in with Twitter.<br />
-            {% endif %}{# result.provider.name == 'tw' #}
-
-        {% endif %}{# result.user.credentials #}
-    {% endif %}
+    <div id="input-date-skeleton" class="hidden">
+        <input class="form-control date-inputs" type="text" placeholder="20150215"/>
+    </div>
 
 {% endblock content %}
